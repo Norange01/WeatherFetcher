@@ -20,8 +20,10 @@ t = datetime.now()
 
 display = drivers.Lcd()
 
-updateHour = 6
-updateMinute = 0
+updateHour1 = 6
+updateMinute1 = 0
+updateHour2 = 18
+updateMinute2 = 0
 
 def getRiskLabel(datatitle):
   if(datatitle=="Thunderstorm Risk"):
@@ -36,6 +38,19 @@ def getRiskLabel(datatitle):
     return "W"
   else:
     return "?"
+  
+def getTempLabels(datatitle):
+  datatitle_words = datatitle.split(" ")
+  timesArr = ["M", "AN", "E"]
+  if(datatitle_words[1].lower()=="morning"):
+    timesArr = ["M", "AN", "E"]
+  elif(datatitle_words[1].lower()=="afternoon"):
+    timesArr = ["AN", "E", "N"]
+  elif(datatitle_words[1].lower()=="evening"):
+    timesArr = ["E", "N", "M"]
+  elif(datatitle_words[1].lower()=="overnight"):
+    timesArr = ["N", "M", "AN"]
+  return timesArr
 
 def getData():
   global tempsline
@@ -89,19 +104,24 @@ def getData():
   ).text
   print(nightDesc)
 
-  tempsline = "MO"
+  timeTitle=driver.find_element(
+    By.XPATH,
+    '/html/body/div[5]/div[2]/div[3]/div[2]/div/div/div[2]/div/div[1]/div[1]'
+  ).text
+  TimeArr = getTempLabels(timeTitle)
+  tempsline = TimeArr[0]
   if (morningTemp.startswith('-')):
     tempsline += morningTemp
   else:
     tempsline += " "
     tempsline += morningTemp
-  tempsline += " AN"
+  tempsline += " "+TimeArr[1]
   if (afternoonTemp.startswith('-')):
     tempsline += afternoonTemp
   else:
     tempsline += " "
     tempsline += afternoonTemp
-  tempsline += " N"
+  tempsline += " "+TimeArr[2]
   if (nightTemp.startswith('-')):
     tempsline += nightTemp
   else:
@@ -168,43 +188,43 @@ def getData():
   #################################################################
 
   driver.get(
-    'https://www.icnamilton.com/')
+    'https://timesprayer.com/en/prayer-times-in-milton.html')
   driver.implicitly_wait(5)
 
   fajr = driver.find_element(
     By.XPATH,
-    '/html/body/div/div[3]/div/article/div/div/div/div[1]/div/div[1]/div/div/div/table/tbody/tr[2]/td[2]'
+    '/html/body/div[6]/div[2]/div/div[2]/div/div[1]/table/tbody/tr[1]/td[2]'
   ).text
   sunrise = driver.find_element(
     By.XPATH,
-    '/html/body/div/div[3]/div/article/div/div/div/div[1]/div/div[1]/div/div/div/table/tbody/tr[2]/td[3]'
+    '/html/body/div[6]/div[2]/div/div[2]/div/div[1]/table/tbody/tr[2]/td[2]'
   ).text
   dhuhr = driver.find_element(
     By.XPATH,
-    '/html/body/div/div[3]/div/article/div/div/div/div[1]/div/div[1]/div/div/div/table/tbody/tr[2]/td[4]'
+    '/html/body/div[6]/div[2]/div/div[2]/div/div[1]/table/tbody/tr[3]/td[2]'
   ).text
   asr = driver.find_element(
     By.XPATH,
-    '/html/body/div/div[3]/div/article/div/div/div/div[1]/div/div[1]/div/div/div/table/tbody/tr[2]/td[5]'
+    '/html/body/div[6]/div[2]/div/div[2]/div/div[1]/table/tbody/tr[4]/td[2]'
   ).text
   maghrib = driver.find_element(
     By.XPATH,
-    '/html/body/div/div[3]/div/article/div/div/div/div[1]/div/div[1]/div/div/div/table/tbody/tr[2]/td[6]'
+    '/html/body/div[6]/div[2]/div/div[2]/div/div[1]/table/tbody/tr[5]/td[2]'
   ).text
   isha = driver.find_element(
     By.XPATH,
-    '/html/body/div/div[3]/div/article/div/div/div/div[1]/div/div[1]/div/div/div/table/tbody/tr[2]/td[7]'
+    '/html/body/div[6]/div[2]/div/div[2]/div/div[1]/table/tbody/tr[6]/td[2]'
   ).text
 
   #prayerline1=x:xx|x:xx|xx:xx
   #prayerline2=x:xx|x:xx|xx:xx
 
   #remove first digit of some prayers:
-  fajr = fajr[1:5]
-  sunrise = sunrise[1:5]
+  fajr = fajr[0:4]
+  sunrise = sunrise[0:4]
   dhuhr = dhuhr[0:5]
-  asr = asr[1:5]
-  maghrib = maghrib[1:5]
+  asr = asr[0:4]
+  maghrib = maghrib[0:4]
   isha = isha[0:5]
 
   prayerline1 = fajr+"|"+sunrise+"|"+dhuhr+" "
@@ -218,7 +238,7 @@ lastDayUpdated= t.day
 display.lcd_clear()
 
 while(True):
-  if(t.hour==updateHour and t.minute==updateMinute):
+  if((t.hour==updateHour1 and t.minute==updateMinute1) or (t.hour==updateHour2 and t.minute==updateMinute2)):
       if(lastDayUpdated!=t.day):
         getData()
         lastDayUpdated= t.day
