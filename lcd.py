@@ -66,48 +66,18 @@ def getData():
   driver =webdriver.Chrome()
   driver.get('https://www.theweathernetwork.com/ca/hourly-weather-forecast/ontario/milton')
 
-  driver.implicitly_wait(5)
+  driver.implicitly_wait(10)
 
-  morningTemp = driver.find_element(
-    By.XPATH,
-    '/html/body/div[5]/div[2]/div[3]/div[2]/div/div/div[2]/div/div[1]/div[4]/div[2]/div[2]/span[2]'
-  ).text
+  morningTemp = driver.find_element(By.CLASS_NAME, "today").find_element(By.CLASS_NAME,"feels-like").find_element(By.CLASS_NAME, "value").text
   print(morningTemp)
 
-  afternoonTemp = driver.find_element(
-    By.XPATH,
-    '/html/body/div[5]/div[2]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[4]/div[2]/div[2]/span[2]'
-  ).text
+  afternoonTemp = driver.find_element(By.CLASS_NAME, "afternoon").find_element(By.CLASS_NAME,"feels-like").find_element(By.CLASS_NAME, "value").text
   print(afternoonTemp)
 
-  nightTemp = driver.find_element(
-    By.XPATH,
-    '/html/body/div[5]/div[2]/div[3]/div[2]/div/div/div[2]/div/div[3]/div[4]/div[2]/div[2]/span[2]'
-  ).text
+  nightTemp = driver.find_element(By.CLASS_NAME, "overnight").find_element(By.CLASS_NAME,"feels-like").find_element(By.CLASS_NAME, "value").text
   print(nightTemp)
 
-  morningDesc = driver.find_element(
-    By.XPATH,
-    '/html/body/div[5]/div[2]/div[3]/div[2]/div/div/div[2]/div/div[1]/div[2]'
-  ).text
-  print(morningDesc)
-
-  afternoonDesc = driver.find_element(
-    By.XPATH,
-    '/html/body/div[5]/div[2]/div[3]/div[2]/div/div/div[2]/div/div[2]/div[2]'
-  ).text
-  print(afternoonDesc)
-
-  nightDesc = driver.find_element(
-    By.XPATH,
-    '/html/body/div[5]/div[2]/div[3]/div[2]/div/div/div[2]/div/div[3]/div[2]'
-  ).text
-  print(nightDesc)
-
-  timeTitle=driver.find_element(
-    By.XPATH,
-    '/html/body/div[5]/div[2]/div[3]/div[2]/div/div/div[2]/div/div[1]/div[1]'
-  ).text
+  timeTitle=driver.find_element(By.CLASS_NAME, "today").find_element(By.CLASS_NAME,"title").text
   TimeArr = getTempLabels(timeTitle)
   tempsline = TimeArr[0]
   if (morningTemp.startswith('-')):
@@ -137,41 +107,41 @@ def getData():
   driver.implicitly_wait(5)
 
   #TS
-  thunderstorm = driver.find_element(
+  thunderstorm = driver.find_element(By.CLASS_NAME, "data-table").find_element(
     By.XPATH,
-    '/html/body/div[4]/div[4]/div[3]/div[2]/div[2]/div/div[1]/div[1]/div/div[2]/div[2]'
+    './/div/div[2]/div[2]'
   ).text
 
   #S
-  snowfall = driver.find_element(
+  snowfall = driver.find_element(By.CLASS_NAME, "data-table").find_element(
     By.XPATH,
-    '/html/body/div[4]/div[4]/div[3]/div[2]/div[2]/div/div[1]/div[1]/div/div[3]/div[2]'
+    './/div/div[3]/div[2]'
   ).text
 
   #FR
-  freezingrain = driver.find_element(
+  freezingrain = driver.find_element(By.CLASS_NAME, "data-table").find_element(
     By.XPATH,
-    '/html/body/div[4]/div[4]/div[3]/div[2]/div[2]/div/div[1]/div[1]/div/div[4]/div[2]'
+    './/div/div[4]/div[2]'
   ).text
 
   #W
-  wind = driver.find_element(
+  wind = driver.find_element(By.CLASS_NAME, "data-table").find_element(
     By.XPATH,
-    '/html/body/div[4]/div[4]/div[3]/div[2]/div[2]/div/div[1]/div[1]/div/div[5]/div[2]'
+    './/div/div[5]/div[2]'
   ).text
 
   #R
-  rain = driver.find_element(
+  rain = driver.find_element(By.CLASS_NAME, "data-table").find_element(
     By.XPATH,
-    '/html/body/div[4]/div[4]/div[3]/div[2]/div[2]/div/div[1]/div[1]/div/div[6]/div[2]'
+    './/div/div[6]/div[2]'
   ).text
 
   risks = [thunderstorm, snowfall, freezingrain, wind, rain]
   risksline = ""
 
   for i in range(5):
-    riskTitleX="/html/body/div[4]/div[4]/div[3]/div[2]/div[2]/div/div[1]/div[1]/div/div["+str(i+2)+"]/div[1]/span[2]"
-    riskTitle=driver.find_element(By.XPATH,riskTitleX).text
+    riskTitleX=".//div["+str(i+2)+"]/div[1]/span[2]"
+    riskTitle=driver.find_element(By.CLASS_NAME, "data-table").find_element(By.XPATH,riskTitleX).text
     riskLabel=getRiskLabel(riskTitle)
     if (int(risks[i]) > 0):
       if (len(risksline) != 0):
@@ -191,29 +161,29 @@ def getData():
     'https://timesprayer.com/en/prayer-times-in-milton.html')
   driver.implicitly_wait(5)
 
-  fajr = driver.find_element(
+  fajr = driver.find_element(By.CLASS_NAME, "ptTable").find_element(
     By.XPATH,
-    '/html/body/div[6]/div[2]/div/div[2]/div/div[1]/table/tbody/tr[1]/td[2]'
+    './/tbody/tr[1]/td[2]'
   ).text
-  sunrise = driver.find_element(
+  sunrise = driver.find_element(By.CLASS_NAME, "ptTable").find_element(
     By.XPATH,
-    '/html/body/div[6]/div[2]/div/div[2]/div/div[1]/table/tbody/tr[2]/td[2]'
+    './/tbody/tr[2]/td[2]'
   ).text
-  dhuhr = driver.find_element(
+  dhuhr = driver.find_element(By.CLASS_NAME, "ptTable").find_element(
     By.XPATH,
-    '/html/body/div[6]/div[2]/div/div[2]/div/div[1]/table/tbody/tr[3]/td[2]'
+    './/tbody/tr[3]/td[2]'
   ).text
-  asr = driver.find_element(
+  asr = driver.find_element(By.CLASS_NAME, "ptTable").find_element(
     By.XPATH,
-    '/html/body/div[6]/div[2]/div/div[2]/div/div[1]/table/tbody/tr[4]/td[2]'
+    './/tbody/tr[4]/td[2]'
   ).text
-  maghrib = driver.find_element(
+  maghrib = driver.find_element(By.CLASS_NAME, "ptTable").find_element(
     By.XPATH,
-    '/html/body/div[6]/div[2]/div/div[2]/div/div[1]/table/tbody/tr[5]/td[2]'
+    './/tbody/tr[5]/td[2]'
   ).text
-  isha = driver.find_element(
+  isha = driver.find_element(By.CLASS_NAME, "ptTable").find_element(
     By.XPATH,
-    '/html/body/div[6]/div[2]/div/div[2]/div/div[1]/table/tbody/tr[6]/td[2]'
+    './/tbody/tr[6]/td[2]'
   ).text
 
   #prayerline1=x:xx|x:xx|xx:xx
