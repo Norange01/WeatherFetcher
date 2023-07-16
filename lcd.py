@@ -204,14 +204,19 @@ def getData():
   driver.quit()
 
 getData()
-lastDayUpdated= t.day
+lastDayUpdated1= t.day-1
+lastDayUpdated2= t.day-1
 display.lcd_clear()
 
 while(True):
-  if((t.hour==updateHour1 and t.minute==updateMinute1) or (t.hour==updateHour2 and t.minute==updateMinute2)):
-      if(lastDayUpdated!=t.day):
+  if(t.hour==updateHour1 and t.minute==updateMinute1):
+      if(lastDayUpdated1!=t.day):
         getData()
-        lastDayUpdated= t.day
+        lastDayUpdated1= t.day
+  if(t.hour==updateHour2 and t.minute==updateMinute2):
+      if(lastDayUpdated2!=t.day):
+        getData()
+        lastDayUpdated2=t.day
         
   display.lcd_display_string(tempsline, 1)  # Write line of text to first line of display
   display.lcd_display_string(risksline,2)
